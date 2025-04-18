@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Spotify-Verizon App{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <h1>Send Top 10 Songs to a Friend</h1>
+    <p class="lead">Search for your favorite artist, view their top tracks, and send them to a friend via Verizon's messaging service.</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-spotify text-white">
+                <h2 class="card-title mb-0">Search for an Artist</h2>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+                
+                <form action="{{ url_for('search') }}" method="post">
+                    <div class="mb-3">
+                        <label for="artist_name" class="form-label">Artist Name</label>
+                        <input type="text" class="form-control" id="artist_name" name="artist_name" placeholder="Enter artist name..." required>
+                    </div>
+                    <button type="submit" class="btn btn-spotify">Search</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-5">
+            <h3>How it works:</h3>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h1 class="display-4 text-muted">1</h1>
+                            <h5 class="card-title">Search for an Artist</h5>
+                            <p class="card-text">Enter the name of your favorite artist to search the Spotify database.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h1 class="display-4 text-muted">2</h1>
+                            <h5 class="card-title">View Top Tracks</h5>
+                            <p class="card-text">Select an artist to view their top 10 tracks on Spotify.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h1 class="display-4 text-muted">3</h1>
+                            <h5 class="card-title">Send to a Friend</h5>
+                            <p class="card-text">Choose a device and send the top tracks to your friend via Verizon's messaging.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

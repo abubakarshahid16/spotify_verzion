@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Select Device - Spotify-Verizon App{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript:history.back()">Top Tracks</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Select Device</li>
+            </ol>
+        </nav>
+        <h1>Select a Device</h1>
+        <p class="lead">Choose a device to send the top 10 tracks to your friend.</p>
+    </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+{% if devices %}
+<div class="row">
+    {% for device in devices %}
+    <div class="col-md-4">
+        <div class="card device-card">
+            <div class="card-body">
+                <h5 class="card-title">{{ device.name }}</h5>
+                <p class="card-text">
+                    {% if device.type %}
+                    <small class="text-muted">Type: {{ device.type }}</small><br>
+                    {% endif %}
+                    {% if device.status %}
+                    <small class="text-muted">Status: {{ device.status }}</small>
+                    {% endif %}
+                </p>
+                <form action="{{ url_for('send_message_route') }}" method="post">
+                    <input type="hidden" name="device_id" value="{{ device.id }}">
+                    <button type="submit" class="btn btn-verizon w-100">Send to This Device</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    No devices found. Please check your Verizon account or try again later.
+</div>
+<div class="text-center mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-primary">Back to Search</a>
+</div>
+{% endif %}
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-spotify text-white">
+                <h3 class="card-title mb-0">Selected Tracks</h3>
+            </div>
+            <div class="card-body">
+                <h4>Top 10 Tracks to Send:</h4>
+                <ol class="list-group list-group-numbered">
+                    {% for track in tracks[:10] %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{ track.name }}</div>
+                            {{ track.artists[0].name }}
+                        </div>
+                        {% if track.album and track.album.image_url %}
+                        <img src="{{ track.album.image_url }}" alt="{{ track.name }}" class="rounded-circle" width="40" height="40">
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

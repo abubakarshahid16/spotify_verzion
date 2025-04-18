@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Top Tracks - Spotify-Verizon App{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Top Tracks</li>
+            </ol>
+        </nav>
+        <h1>Top 10 Tracks</h1>
+        <p class="lead">These are the top 10 tracks for this artist. You can send them to a friend via Verizon's messaging service.</p>
+    </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+{% if tracks %}
+<div class="row mb-4">
+    <div class="col-12 text-end">
+        <a href="{{ url_for('verizon_devices') }}" class="btn btn-verizon">Send to a Friend</a>
+    </div>
+</div>
+
+<div class="row">
+    {% for track in tracks %}
+    <div class="col-md-6">
+        <div class="card track-card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    {% if track.album.image_url %}
+                    <img src="{{ track.album.image_url }}" class="img-fluid rounded-start" alt="{{ track.name }}" style="height: 100%; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-secondary text-white d-flex justify-content-center align-items-center" style="height: 100%;">
+                        <h5>No Image</h5>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ track.name }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Album: {{ track.album.name }}<br>
+                                Artists: {{ track.artists|map(attribute='name')|join(', ') }}
+                            </small>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if track.preview_url %}
+                            <audio controls class="w-100 mb-2">
+                                <source src="{{ track.preview_url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            {% else %}
+                            <small class="text-muted">Preview not available</small>
+                            {% endif %}
+                        </div>
+                        <div class="text-end">
+                            <a href="{{ track.external_url }}" target="_blank" class="btn btn-sm btn-outline-success">Open in Spotify</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="{{ url_for('verizon_devices') }}" class="btn btn-lg btn-verizon">Send to a Friend</a>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    No tracks found. Please try another artist.
+</div>
+<div class="text-center mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-primary">Back to Search</a>
+</div>
+{% endif %}
+{% endblock %} 

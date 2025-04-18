@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - Spotify-Verizon App{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Search Results</li>
+            </ol>
+        </nav>
+        <h1>Artist Search Results</h1>
+        <p class="lead">Select an artist to view their top tracks.</p>
+    </div>
+</div>
+
+{% if artists %}
+<div class="row">
+    {% for artist in artists %}
+    <div class="col-md-4">
+        <div class="card artist-card">
+            <div class="card-img-container" style="height: 200px; overflow: hidden;">
+                {% if artist.image_url %}
+                <img src="{{ artist.image_url }}" class="card-img-top" alt="{{ artist.name }}" style="object-fit: cover; height: 100%; width: 100%;">
+                {% else %}
+                <div class="bg-secondary text-white d-flex justify-content-center align-items-center" style="height: 100%;">
+                    <h3>No Image</h3>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ artist.name }}</h5>
+                {% if artist.genres %}
+                <p class="card-text">
+                    <small class="text-muted">
+                        {{ artist.genres|join(', ') if artist.genres|length > 0 else 'No genres listed' }}
+                    </small>
+                </p>
+                {% endif %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a href="{{ url_for('artist_top_tracks', artist_id=artist.id) }}" class="btn btn-spotify">View Top Tracks</a>
+                    </div>
+                    {% if artist.popularity %}
+                    <small class="text-muted">Popularity: {{ artist.popularity }}/100</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    No artists found. Please try another search.
+</div>
+<div class="text-center mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-primary">Back to Search</a>
+</div>
+{% endif %}
+{% endblock %} 
